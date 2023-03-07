@@ -53,7 +53,7 @@ Figure 4: The figure follows the indexing of Figure 3, with the addition of the 
 **POST-PROCESSING**
 
 In the post-processing phase it was decided to use the **binary_fill_holes** morphological operator of the Scipy library to improve the quality of the segmentation masks. In particular, this operator allows to fill any holes present in the masks, thus improving the continuity of the edges of the tumors.
-In addition, the areas, mean intensities, and histogram of all operator-segmented tumors were evaluated using a separate script (). The objective of this review was to compare these characteristics with those obtained from the segmentation model, in order to evaluate metrics capable of distinguishing artifacts (which have the same size and shape as tumors) from tumors and reduce the presence of false positives .
+In addition, the areas, mean intensities, and histogram of all operator-segmented tumors were evaluated using a separate script (**Analisi-tumori.ipynb**). The objective of this review was to compare these characteristics with those obtained from the segmentation model, in order to evaluate metrics capable of distinguishing artifacts (which have the same size and shape as tumors) from tumors and reduce the presence of false positives .
 The script in question iterates through the batches of images and masks, superimposes the mask on each image and calculates the properties of the regions (tumors) present, using the regionprops function of the skimage library. For each region identified, the algorithm extracts the area, the average intensity of the pixels and the normalized histogram, which are then saved in a dictionary. Figure 5 shows the qualitative results.
 
 
