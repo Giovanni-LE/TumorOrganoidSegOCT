@@ -13,12 +13,13 @@ Furthermore, a seed equal to 46 has been set, i.e. the initial conditions have b
 In this work, three evaluation metrics were used to quantify the performance of the segmentation algorithm: **dice**, **recall** and **precision**.
 The Dice coefficient was used to quantify the similarity between the segmentation performed by the algorithm and the ground truth. The Dice of a single 3D volume was calculated as shown in Figure 1.
 
-<img width="370" alt="Formula Dice" src="https://user-images.githubusercontent.com/119749266/223556789-f7ddaf26-1de1-43af-8600-7235338a5edb.png">
+<div align="center">
+    <img  width="370" src="https://user-images.githubusercontent.com/119749266/223556789-f7ddaf26-1de1-43af-8600-7235338a5edb.png">
+</div>
 
-*Figure 1: Formula for the calculation of Dice 3D, where MM is the set of voxels belonging to the manual mask and AM is the set of voxels belonging to the automatic mask*
-
-
-
+<p align="center">
+<i>Figure 1: Formula for the calculation of Dice 3D, where MM is the set of voxels belonging to the manual mask and AM is the set of voxels belonging to the automatic mask.</i>
+</p>
 
 Recall and precision were used to understand if the algorithm tends to over- or under-segment the structures of the 3D image, respectively.
 
@@ -34,9 +35,14 @@ The **delartifact()** function processes the previously filtered original image 
 For each 2D slice of the original image the function starts by stretching the binary mask, thus filling any holes within the white regions. This operation is performed with a 3x3 kernel to join the identified elements (therefore the artifacts), which are often detached from each other by very few pixels. Subsequently, the mask is eroded with the same 3x3 kernel, overlaid on the original image and passed as input to the regionprops() function of the skimage.measure module.
 The function traverses each region found in the mask and removes linear artifacts. Artifacts are identified based on their shape. In particular, elements with a length greater than a certain predetermined value and a width smaller than a certain predetermined value are considered linear artifacts. To remove the artifact from the image the function assigns to the pixel the minimum intensity of the original image. In figure 2 it is possible to observe the qualitative results.
 
-![artefatti](https://user-images.githubusercontent.com/119749266/223556867-9fe9a7cb-7676-4d3f-8319-fe0c4a258a8f.png)
+<div align="center">
+    <img src="https://user-images.githubusercontent.com/119749266/223556867-9fe9a7cb-7676-4d3f-8319-fe0c4a258a8f.png">
+</div>
 
-*Figure 2: In figure 2A the original image is represented, in figure 2B we see the binary mask with the red bounding boxes that highlight the elements identified through regionprops, in figure 2C we observe the binary mask with the blue bounding boxes that indicate the artifacts detected, while Figure 2D shows the original image corrected after artifacts are removed.*
+<p align="center">
+<i>Figure 2: In figure 2A the original image is represented, in figure 2B we see the binary mask with the red bounding boxes that highlight the elements identified through regionprops, in figure 2C we observe the binary mask with the blue bounding boxes that indicate the artifacts detected, while Figure 2D shows the original image corrected after artifacts are removed.</i>
+</p>
+
 
 # **PRE-PROCESSING - CONTRAST**
 
@@ -45,13 +51,21 @@ Contrast is a key element for OCT images, as it allows to increase the intensity
 Where the variable intensity range is equal to the difference between the maximum value and the minimum value of the image given as input to the function, the variable min represents the minimum value of the pixels of the image itself and gamma is the parameter to be given as input to the function.
 To improve the contrast of the images, a gamma value of 1.5 was set together with a median filter. In figures 3 and 4 it is possible to observe the qualitative results.
 
-![senzaContrasto](https://user-images.githubusercontent.com/119749266/223557690-83766d64-bede-4d9e-9bda-34293697d83d.png)
+<div align="center">
+    <img src="https://user-images.githubusercontent.com/119749266/223557690-83766d64-bede-4d9e-9bda-34293697d83d.png">
+</div>
 
-*Figure 3: Figure 3A shows the original image without any pre-processing. Instead, in Figure 3B it is possible to observe the automatic mask produced by the segmentation model, with the red bounding boxes delimiting the segmented elements. Finally, Figure 3C shows the segmented mask via the manual operator*
+<p align="center">
+<i>Figure 3: Figure 3A shows the original image without any pre-processing. Instead, in Figure 3B it is possible to observe the automatic mask produced by the segmentation model, with the red bounding boxes delimiting the segmented elements. Finally, Figure 3C shows the segmented mask via the manual operator.</i>
+</p>
 
-![Concontrasto](https://user-images.githubusercontent.com/119749266/223557743-df0a8a5b-c66d-40cd-9fbc-6f8307ff4892.png)
+<div align="center">
+    <img src="https://user-images.githubusercontent.com/119749266/223557743-df0a8a5b-c66d-40cd-9fbc-6f8307ff4892.png">
+</div>
 
-*Figure 4: The figure follows the indexing of Figure 3, with the addition of the application of contrast.*
+<p align="center">
+<i>Figure 4: The figure follows the indexing of Figure 3, with the addition of the application of contrast.</i>
+</p>
 
 # **POST-PROCESSING**
 
@@ -59,7 +73,10 @@ In the post-processing phase it was decided to use the **binary_fill_holes** mor
 In addition, the areas, mean intensities, and histogram of all operator-segmented tumors were evaluated using a separate script (**Analisi-tumori.ipynb**). The objective of this review was to compare these characteristics with those obtained from the segmentation model, in order to evaluate metrics capable of distinguishing artifacts (which have the same size and shape as tumors) from tumors and reduce the presence of false positives .
 The script in question iterates through the batches of images and masks, superimposes the mask on each image and calculates the properties of the regions (tumors) present, using the regionprops function of the skimage library. For each region identified, the algorithm extracts the area, the average intensity of the pixels and the normalized histogram, which are then saved in a dictionary. Figure 5 shows the qualitative results.
 
+<div align="center">
+    <img src="https://user-images.githubusercontent.com/119749266/223557776-59b8b376-a4eb-4e24-b801-f7582be3c071.png">
+</div>
 
-![Post](https://user-images.githubusercontent.com/119749266/223557776-59b8b376-a4eb-4e24-b801-f7582be3c071.png)
-
-*Figure 5: Figure 5A shows the segmentation output to the classifier without the application of the morphological operator. In figure 5B, the same segmentation, but with the application of the binary_fill_holes.*
+<p align="center">
+<i>Figure 5: Figure 5A shows the segmentation output to the classifier without the application of the morphological operator. In figure 5B, the same segmentation, but with the application of the binary_fill_holes.</i>
+</p>
