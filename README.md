@@ -16,6 +16,7 @@ The Dice coefficient was used to quantify the similarity between the segmentatio
 <img width="370" alt="Formula Dice" src="https://user-images.githubusercontent.com/119749266/223556789-f7ddaf26-1de1-43af-8600-7235338a5edb.png">
 
 Figure 1: Formula for the calculation of Dice 3D, where MM is the set of voxels belonging to the manual mask and AM is the set of voxels belonging to the automatic mask
+
 Recall and precision were used to understand if the algorithm tends to over- or under-segment the structures of the 3D image, respectively.
 
 **PRE-PROCESSING**
@@ -25,7 +26,7 @@ During the analysis phase it was observed that the images present not only high 
 **ARTIFACT MANAGEMENT**
 
 In addition to point-type artefacts, which appear as pixels with an intensity similar to that of the tumor, linear artefacts were also detected during the analysis of the images, mainly along the horizontal dimension. These artifacts share the same intensity as the tumor and can be an obstacle in the tumor identification phase during model training, as they can be incorrectly recognized as part of the tumor tissue. In light of this problem, it was decided to create a function, called delartifact(), able to handle the linear artifacts present in the images.
-The delartifact() function processes the previously filtered original image and a binary mask generated from the original image using the img_to_mask() function, which uses the global thresholding technique. The threshold was chosen equal to 1700, since through the 3D Slicer software it was observed that all the artifacts have an intensity similar to or greater than this value.
+The **delartifact()** function processes the previously filtered original image and a binary mask generated from the original image using the **img_to_mask()** function, which uses the global thresholding technique. The threshold was chosen equal to 1700, since through the 3D Slicer software it was observed that all the artifacts have an intensity similar to or greater than this value.
 
 For each 2D slice of the original image the function starts by stretching the binary mask, thus filling any holes within the white regions. This operation is performed with a 3x3 kernel to join the identified elements (therefore the artifacts), which are often detached from each other by very few pixels. Subsequently, the mask is eroded with the same 3x3 kernel, overlaid on the original image and passed as input to the regionprops() function of the skimage.measure module.
 The function traverses each region found in the mask and removes linear artifacts. Artifacts are identified based on their shape. In particular, elements with a length greater than a certain predetermined value and a width smaller than a certain predetermined value are considered linear artifacts. To remove the artifact from the image the function assigns to the pixel the minimum intensity of the original image. In figure 2 it is possible to observe the qualitative results.
@@ -51,8 +52,8 @@ Figure 4: The figure follows the indexing of Figure 3, with the addition of the 
 
 **POST-PROCESSING**
 
-In the post-processing phase it was decided to use the binary_fill_holes morphological operator of the Scipy library to improve the quality of the segmentation masks. In particular, this operator allows to fill any holes present in the masks, thus improving the continuity of the edges of the tumors.
-In addition, the areas, mean intensities, and histogram of all operator-segmented tumors were evaluated using a separate script. The objective of this review was to compare these characteristics with those obtained from the segmentation model, in order to evaluate metrics capable of distinguishing artifacts (which have the same size and shape as tumors) from tumors and reduce the presence of false positives .
+In the post-processing phase it was decided to use the **binary_fill_holes** morphological operator of the Scipy library to improve the quality of the segmentation masks. In particular, this operator allows to fill any holes present in the masks, thus improving the continuity of the edges of the tumors.
+In addition, the areas, mean intensities, and histogram of all operator-segmented tumors were evaluated using a separate script (). The objective of this review was to compare these characteristics with those obtained from the segmentation model, in order to evaluate metrics capable of distinguishing artifacts (which have the same size and shape as tumors) from tumors and reduce the presence of false positives .
 The script in question iterates through the batches of images and masks, superimposes the mask on each image and calculates the properties of the regions (tumors) present, using the regionprops function of the skimage library. For each region identified, the algorithm extracts the area, the average intensity of the pixels and the normalized histogram, which are then saved in a dictionary. Figure 5 shows the qualitative results.
 
 
