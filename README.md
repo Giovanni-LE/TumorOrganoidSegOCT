@@ -23,6 +23,7 @@ Recall and precision were used to understand if the algorithm tends to over- or 
 During the analysis phase it was observed that the images present not only high "salt and pepper" noise, but also the presence of artifacts on some of the image slices. Most of the artifacts consist of lines running throughout the image and have the same intensity as the pixels of the tumors. These artifacts can be caused by various sources, such as image capture problems
 
 **ARTIFACT MANAGEMENT**
+
 In addition to point-type artefacts, which appear as pixels with an intensity similar to that of the tumor, linear artefacts were also detected during the analysis of the images, mainly along the horizontal dimension. These artifacts share the same intensity as the tumor and can be an obstacle in the tumor identification phase during model training, as they can be incorrectly recognized as part of the tumor tissue. In light of this problem, it was decided to create a function, called delartifact(), able to handle the linear artifacts present in the images.
 The delartifact() function processes the previously filtered original image and a binary mask generated from the original image using the img_to_mask() function, which uses the global thresholding technique. The threshold was chosen equal to 1700, since through the 3D Slicer software it was observed that all the artifacts have an intensity similar to or greater than this value.
 
